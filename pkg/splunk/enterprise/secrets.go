@@ -18,6 +18,34 @@ import (
 	splctrl "github.com/splunk/splunk-operator/pkg/splunk/controller"
 )
 
+// SetSecretOwnerRef sets owner references for object
+func SetSecretOwnerRef(client splcommon.ControllerClient, secret *corev1.Secret, cr splcommon.MetaObject) error {
+	currentOwnerRef := secret.GetOwnerReferences()
+
+	// Check if owner ref exists
+	for i := range currentOwnerRef {
+		if reflect.DeepEqual(currentOwnerRef[i].Name, cr.GetName()) {
+			return nil
+		}
+	}
+
+	// Owner ref doesn't exist, check if secret exists
+	namespacedName := types.NamespacedName{Namespace: secret.GetNamespace(), Name: secret.GetName()}
+	err := client.Get(context.TODO(), namespacedName, secret)
+	if err != nil {
+		return err
+	}
+
+	// Exists, update secret with owner references
+	secret.SetOwnerReferences(append(secret.GetOwnerReferences(), splcommon.AsOwner(cr)))
+	err = splctrl.UpdateResource(client, secret)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 // GetNamespaceScopedSecret retreives namespace scoped secret
 func GetNamespaceScopedSecret(c splcommon.ControllerClient, namespace string) (*corev1.Secret, error) {
 	var namespaceScopedSecret corev1.Secret

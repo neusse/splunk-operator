@@ -39,6 +39,12 @@ func ApplySplunkConfig(client splcommon.ControllerClient, cr splcommon.MetaObjec
 		return nil, err
 	}
 
+	// Set secret owner references
+	err = SetSecretOwnerRef(client, namespaceScopedSecret, cr)
+	if err != nil {
+		return nil, err
+	}
+
 	// create splunk defaults (for inline config)
 	if spec.Defaults != "" {
 		defaultsMap := getSplunkDefaults(cr.GetName(), cr.GetNamespace(), instanceType, spec.Defaults)

@@ -21,6 +21,8 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 
+	corev1 "k8s.io/api/core/v1"
+
 	enterprisev1 "github.com/splunk/splunk-operator/pkg/apis/enterprise/v1alpha3"
 	splcommon "github.com/splunk/splunk-operator/pkg/splunk/common"
 	splctrl "github.com/splunk/splunk-operator/pkg/splunk/controller"
@@ -49,7 +51,7 @@ func (ctrl SearchHeadClusterController) GetInstance() splcommon.MetaObject {
 
 // GetWatchTypes returns a list of types owned by the controller that it would like to receive watch events for
 func (ctrl SearchHeadClusterController) GetWatchTypes() []runtime.Object {
-	return []runtime.Object{&appsv1.StatefulSet{}}
+	return []runtime.Object{&appsv1.StatefulSet{}, &corev1.Secret{}}
 }
 
 // Reconcile is used to perform an idempotent reconciliation of the custom resource managed by this controller

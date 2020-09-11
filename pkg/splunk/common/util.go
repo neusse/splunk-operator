@@ -37,7 +37,7 @@ func init() {
 
 // AsOwner returns an object to use for Kubernetes resource ownership references.
 func AsOwner(cr MetaObject) metav1.OwnerReference {
-	trueVar := true
+	trueVar := false
 
 	return metav1.OwnerReference{
 		APIVersion: cr.GetObjectKind().GroupVersionKind().GroupVersion().String(),
