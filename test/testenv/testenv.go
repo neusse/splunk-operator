@@ -413,7 +413,7 @@ func (testenv *TestEnv) createOperator() error {
 			return false, err
 		}
 
-		dumpGetPods(testenv.namespace)
+		DumpGetPods(testenv.namespace)
 		if deployment.Status.UpdatedReplicas < deployment.Status.Replicas {
 			return false, nil
 		}

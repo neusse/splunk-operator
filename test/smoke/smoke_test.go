@@ -1,4 +1,4 @@
-package basic
+package smoke
 
 import (
 	"encoding/json"
